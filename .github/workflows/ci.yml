@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  seguridad-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Verificar secreto enmascarado
+        run: echo "JWT_SECRET es ${{ secrets.JWT_SECRET }}"
+
+      - name: Pruebas
+        run: npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
